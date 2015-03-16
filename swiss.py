@@ -19,7 +19,9 @@ def ffg_backtrack(pairings, to_pair, opps):
     return None
 
 def make_sos(players, points, opps):
-    sos = {p: sum(points[q] for q in opps[p]) for p in players}
+    sos = dict()
+    for p in players:
+        sos[p] = sum(points[q] for q in opps[p])
     return sos
 
 def make_standings(players, points, sos):
@@ -56,8 +58,10 @@ def pair_round(players, points, opps):
 # Example of use.
 # Initialize players, points, opps.
 players = ["a", "b", "c", "d", "e", "f"]
-points = {x:0 for x in players}
-opps = {x:[] for x in players}
+points, opps = dict(), dict()
+for p in players:
+    points[p] = 0
+    opps[p] = []
 
 # Pair round 1.
 pair_round(players, points, opps)
