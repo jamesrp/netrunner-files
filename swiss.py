@@ -38,23 +38,28 @@ def print_pairings(pairings):
     for p in pairings2:
         print "%-30s -VS- %30s"%(p[0], p[1])
 
+def full_update(players, points, opps):
+    sos = make_sos(players, points, opps)
+    standings = make_standings(players, points, sos)
+    print_standings(standings, points, sos)
+    pairings = make_pairings(standings, opps)
+    print_pairings(pairings)
+    print "TEMPLATE FOR NEXT ROUND"
+    updated_opps = dict()
+    for p in pairings:
+        p1, p2 = p
+        updated_opps[p1] = opps[p1] + [p2]
+        updated_opps[p2] = opps[p2] + [p1]
+    print_opps(updated_opps)
+
+def print_opps(opps):
+    print "UPDATED OPPONENTS"
+    print repr(opps)
+
 players = ["a", "b", "c", "d", "e", "f"]
 points = {x:0 for x in players}
 opps = {x:[] for x in players}
-sos = make_sos(players, points, opps)
-standings = make_standings(players, points, sos)
-print_standings(standings, points, sos)
-pairings = make_pairings(standings, opps)
-print_pairings(pairings)
-print "\n\nRound 2\n\n"
+full_update(player, points, opps)
 
 points = {"a": 2, "b": 2, "f": 0, "e": 4, "c": 2, "d": 1}
-for p in pairings:
-    opps[p[0]].append(p[1])
-    opps[p[1]].append(p[0])
-sos = make_sos(players, points, opps)
-standings = make_standings(players, points, sos)
-print_standings(standings, points, sos)
-pairings = make_pairings(standings, opps)
-print_pairings(pairings)
 
