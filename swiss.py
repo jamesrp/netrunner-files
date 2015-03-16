@@ -59,7 +59,7 @@ def print_opps(opps):
 players = ["a", "b", "c", "d", "e", "f"]
 points = {x:0 for x in players}
 opps = {x:[] for x in players}
-full_update(player, points, opps)
+full_update(players, points, opps)
 
 points = {"a": 2, "b": 2, "f": 0, "e": 4, "c": 2, "d": 1}
 
