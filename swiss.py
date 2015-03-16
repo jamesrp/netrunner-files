@@ -44,7 +44,6 @@ def full_update(players, points, opps):
     print_standings(standings, points, sos)
     pairings = make_pairings(standings, opps)
     print_pairings(pairings)
-    print "TEMPLATE FOR NEXT ROUND"
     updated_opps = dict()
     for p in pairings:
         p1, p2 = p
