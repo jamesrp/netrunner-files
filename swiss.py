@@ -38,7 +38,7 @@ def print_pairings(pairings):
     for p in pairings2:
         print "%-30s -VS- %30s"%(p[0], p[1])
 
-def full_update(players, points, opps):
+def pair_round(players, points, opps):
     sos = make_sos(players, points, opps)
     standings = make_standings(players, points, sos)
     print_standings(standings, points, sos)
@@ -53,10 +53,20 @@ def full_update(players, points, opps):
     print "opps =", repr(updated_opps)
     print "points =", repr(points)
 
+# Example of use.
+# Initialize players, points, opps.
 players = ["a", "b", "c", "d", "e", "f"]
 points = {x:0 for x in players}
 opps = {x:[] for x in players}
-full_update(players, points, opps)
 
-points = {"a": 2, "b": 2, "f": 0, "e": 4, "c": 2, "d": 1}
+# Pair round 1.
+pair_round(players, points, opps)
 
+# opps from printed template
+opps = {'a': ['b'], 'c': ['d'], 'b': ['a'], 'e': ['f'], 'd': ['c'], 'f': ['e']}
+# points from printed template, update this.
+# points = {'a': 0, 'c': 0, 'b': 0, 'e': 0, 'd': 0, 'f': 0}
+points = {'a': 2, 'c': 2, 'b': 2, 'e': 4, 'd': 1, 'f': 0}
+
+# Pair round 2.
+pair_round(players, points, opps)
