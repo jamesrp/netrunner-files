@@ -49,11 +49,9 @@ def full_update(players, points, opps):
         p1, p2 = p
         updated_opps[p1] = opps[p1] + [p2]
         updated_opps[p2] = opps[p2] + [p1]
-    print_opps(updated_opps)
-
-def print_opps(opps):
-    print "UPDATED OPPONENTS"
-    print repr(opps)
+    print "TEMPLATE FOR NEXT ROUND"
+    print "opps =", repr(updated_opps)
+    print "points =", repr(points)
 
 players = ["a", "b", "c", "d", "e", "f"]
 points = {x:0 for x in players}
