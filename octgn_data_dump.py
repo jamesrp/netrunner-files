@@ -10,20 +10,6 @@ csvreader = csv.reader(csvfile, delimiter=',', quotechar='"')
 csvrows = list(csvreader)
 csvfile.close()
 
-# For debugging
-# print list(enumerate(csvrows[0]))
-# [(0, 'Corp_Player'), (1, 'Corp_Faction'), (2, 'Runner_Player'), (3,
-# 'Runner_Faction'), (4, 'GameStart'), (5, 'Duration'), (6, 'Result'), (7,
-# 'Turns_Played'), (8, 'Win'), (9, 'Version'), (10, 'Corp_Inf'), (11,
-# 'Runner_Inf'), (12, 'Corp_Score'), (13, 'Runner_Score'), (14, 'GameLobby'),
-# (15, 'P_ANR'), (16, 'P_CNR'), (17, 'O_CNR'), (18, 'LeagueID')]
-# print list(enumerate(csvrows[1]))
-# [(0, 'explodycat'), (1, 'Haas-Bioroid | Engineering the Future'), (2,
-# 'lpoulter'), (3, 'Criminal | Andromeda'), (4, '2014-11-22 02:15:50'), (5,
-# '24'), (6, 'AgendaVictory'), (7, '15'), (8, 'True'), (9, '3.15.1.1'), (10,
-# '15'), (11, '15'), (12, '7'), (13, '4'), (14, 'SHL2'), (15, '13'), (16, '59'),
-# (17, '45'), (18, 'SHL2')]
-
 
 # To handle both SHL2 and main data set, first determine which indices map to
 # which fields.
@@ -34,30 +20,10 @@ runner_faction_index = csvrows[0].index('Runner_Faction')
 result_index = csvrows[0].index('Result')
 version_index = csvrows[0].index('Version')
 
-corp_win_conditions = frozenset(['Flatlined', 'ConcedeVictory', 'AgendaVictory',
-'FlatlineVictory'])
+corp_win_conditions = frozenset(['Flatlined', 'ConcedeVictory', 'AgendaVictory', 'FlatlineVictory'])
 runner_win_conditions = frozenset(['AgendaDefeat', 'DeckDefeat', 'Conceded'])
 
-
 csvrows = csvrows[1:]
-
-# Filter to just matches post order and chaos.
-csvrows = [row for row in csvrows if row[version_index].find("3.16") != -1]
-
-# Rank players by win percentage.
-wins = collections.defaultdict(int)
-total = collections.defaultdict(int)
-
-for row in csvrows:
-    total[row[corp_player_index]] += 1
-    total[row[runner_player_index]] += 1
-    result = row[result_index]
-    if result in corp_win_conditions:
-        wins[row[corp_player_index]] += 1
-    elif result in runner_win_conditions:
-        wins[row[runner_player_index]] += 1
-    else:
-        print "Error - unexpected result: " + result
 
 # Elo calculation.
 elo_ratings = collections.defaultdict(lambda: 1600)
@@ -88,16 +54,15 @@ for row in csvrows:
 
 
 # top players by elo
-top_elo = [(player, elo_ratings[player]) for player in wins]
+#top_elo = [(player, elo_ratings[player]) for player in wins]
+top_elo = elo_ratings.items()
 cutoff_elos = int(len(top_elo)*.90)
-best_players = [x[0] for x in sorted(top_elo, key = lambda b:
-b[1])[cutoff_elos:]]
+best_players = [x[0] for x in sorted(top_elo, key = lambda b: b[1])[cutoff_elos:]]
+best_players = frozenset(best_players)
 
 
-# Further filter identities to matches played where both players are in this
-# set.
-csvrows = [row for row in csvrows if row[runner_player_index] in best_players
-and row[corp_player_index] in best_players]
+# Further filter identities to matches played where both players are in this set, and OCGN version == 3.16
+csvrows = [row for row in csvrows if row[runner_player_index] in best_players and row[corp_player_index] in best_players and row[version_index].find("3.16") != -1]
 
 # Redo elo calculation with deck identities.
 # TODO - this seems over fancy in retrospect. Why not just treat the identities
