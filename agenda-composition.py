@@ -1,6 +1,7 @@
 NUM_AGENDA_POINTS = 7
 DECK_SIZE = 49
-AGENDAS = ["TFP"]*7
+AGENDAS = ["TFP"]*1 + [2]*7
+TFP_PERCENT = 1.0
 
 import random, collections
 
@@ -21,12 +22,10 @@ def num_accesses(deck, points):
     total = 0
     for e, v in enumerate(deck):
         if v == "TFP":
-            if random.random() > 0.4:
-                continue
-            else:
+            if random.random() < TFP_PERCENT:
                 total += 3
-                continue
-        total += v
+        else:
+            total += v
         if total >= points:
             return e + 1
 
@@ -39,9 +38,11 @@ def test_num_accesses():
 test_num_accesses()
 
 def pprint(d):
+    total = 0
     ks = sorted(d.iterkeys())
     for k in ks:
-        print k, d[k]
+        total += d[k]
+        print k, total
 
 def ms(d):
     mean, variance = 0, 0
