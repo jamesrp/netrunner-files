@@ -1,6 +1,6 @@
 NUM_AGENDA_POINTS = 7
 DECK_SIZE = 49
-AGENDAS = ["TFP"]*1 + [2]*7
+AGENDAS = [4,4,4,2,2,2]
 TFP_PERCENT = 1.0
 
 import random, collections
@@ -66,10 +66,8 @@ def quantiles(d, qs):
             q = qs[i]
     return out
 
+print "Agendas", AGENDAS
 out = simulate(NUM_AGENDA_POINTS, DECK_SIZE, AGENDAS, 100000)
 pprint(out)
 mean, variance = ms(out)
-q = quantiles(out, [.1,.25,.5,.75,.9])
-print "Quantiles:"
-pprint(q)
 print "Mean, stdev:\n", mean, variance**0.5
