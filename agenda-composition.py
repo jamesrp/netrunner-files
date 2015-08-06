@@ -1,7 +1,7 @@
 NUM_AGENDA_POINTS = 7
-DECK_SIZE = 49
-AGENDAS = [4,4,4,2,2,2]
-TFP_PERCENT = 1.0
+DECK_SIZE = 44
+AGENDAS = ["TFP","TFP","TFP",2,2,2]
+TFP_PERCENT = 0.4
 
 import random, collections
 
@@ -13,8 +13,9 @@ def simulate(points, deck_size, agendas, samples):
         counts[num_accesses(deck, points)] += 1
     out = dict()
     for k, v in counts.iteritems():
-        out[k] = v/float(samples)
-    return out
+        if k != None:
+            out[k] = v/float(samples)
+    return out, counts[None]/float(samples)
 
 def num_accesses(deck, points):
     if points == 0:
@@ -30,6 +31,7 @@ def num_accesses(deck, points):
             return e + 1
 
 def test_num_accesses():
+    #TODO: regression test for TFP
     deck = [0,0,1,0,3]
     assert(num_accesses(deck, 1) == 3)        
     assert(num_accesses(deck, 4) == 5)
@@ -67,7 +69,9 @@ def quantiles(d, qs):
     return out
 
 print "Agendas", AGENDAS
-out = simulate(NUM_AGENDA_POINTS, DECK_SIZE, AGENDAS, 100000)
+out, fail_pct  = simulate(NUM_AGENDA_POINTS, DECK_SIZE, AGENDAS, 100000)
 pprint(out)
+if fail_pct > 0:
+    print "Runner has %f chance to never win." % fail_pct
 mean, variance = ms(out)
 print "Mean, stdev:\n", mean, variance**0.5
