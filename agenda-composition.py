@@ -1,6 +1,6 @@
-NUM_AGENDA_POINTS = 7
-DECK_SIZE = 44
-AGENDAS = ["TFP","TFP","TFP",2,2,2]
+NUM_AGENDA_POINTS = 6
+DECK_SIZE = 24
+AGENDAS = ["TFP"]*3 + [4]*0 + [2]*3
 TFP_PERCENT = 0.4
 
 import random, collections
